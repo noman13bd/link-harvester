@@ -9,6 +9,8 @@ class DomainModel extends Model
 {
     use HasFactory;
 
+    protected $table = 'domains';
+
     protected $fillable = ['name'];
 
     public function urls()

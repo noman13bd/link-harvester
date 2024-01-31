@@ -1,21 +1,21 @@
-@extends('layouts.app')
+@extends('auth.layouts')
 
 @section('content')
 <div x-data="{ search: '{{ e($search) }}' }" class="container mx-auto p-6">
     <div class="bg-white rounded shadow-md p-6">
         <h2 class="text-2xl font-bold mb-6">Show URLs</h2>
-        
+
         <div class="mb-4">
-            <input 
-                x-model="search" 
+            <input
+                x-model="search"
                 x-on:input.debounce.500ms="window.location = '{{ url()->current() }}?search=' + search"
-                type="text" 
-                placeholder="Search..." 
+                type="text"
+                placeholder="Search..."
                 class="w-full px-3 py-2 border rounded-md focus:outline-none focus:border-blue-500"
                 style="padding: 5px 10px; margin: 10px 0px; border: 1px solid #ccc;"
             />
         </div>
-        
+
         <table class="min-w-full bg-white border">
             <thead>
                 <tr>
@@ -43,7 +43,7 @@
                 @endforelse
             </tbody>
         </table>
-        
+
         <div class="pagination">
             <p>&nbsp;</p>
             <a href="{{ $urls->previousPageUrl() }}" rel="prev">Previous</a>
@@ -64,4 +64,3 @@
 </div>
 @endsection
 
-        

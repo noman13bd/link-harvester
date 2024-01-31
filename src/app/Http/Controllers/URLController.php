@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreURLRequest;
+use App\Http\Requests\UrlRequest;
 use App\Jobs\ProcessURLsJob;
-use App\Models\Domain;
-use App\Models\Url;
+use App\Models\DomainModel;
+use App\Models\UrlModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -20,10 +20,10 @@ class URLController extends Controller
     }
 
     /**
-     * @param StoreURLRequest $request
+     * @param UrlRequest $request
      * @return
      */
-    public function store(StoreURLRequest $request)
+    public function store(UrlRequest $request)
     {
         try {
             $urls = explode("\n", trim($request->validated()['urls']));
@@ -37,7 +37,7 @@ class URLController extends Controller
             }
 
             // Dispatching the job with the valid URLs
-            dispatch(new ProcessURLsJob($validUrls));
+            // dispatch(new ProcessURLsJob($validUrls));
             return redirect()->route('urls.create')->with('message', 'URLs are being processed.');
         } catch (\Exception $e) {
             Log::error('Error storing URLs: ' . $e->getMessage());
@@ -58,7 +58,7 @@ class URLController extends Controller
              $sort = $request->input('sort', 'url'); // default sort by url
              $order = $request->input('order', 'asc'); // default order ascending
      
-             $query = Url::with('domain')
+             $query = UrlModel::with('domain')
                  ->when($search, function ($query, $search) {
                      return $query->where('url', 'like', "%$search%")
                                  ->orWhereHas('domain', function ($query) use ($search) {
