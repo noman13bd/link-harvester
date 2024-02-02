@@ -6,6 +6,8 @@ Go the application directory `link-harvester-app` and run the following commands
 
     $ cp .env.example .env
 
+    $ docker compose exec app composer install
+
 ### Step 2: Build the container
 
     $ docker compose up --build -d
