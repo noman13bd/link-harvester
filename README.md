@@ -1,6 +1,6 @@
 # Installation
 
-Go the application directory `link-harvester-app` and run the following commands: 
+Go the application directory where its cloned and run the following commands: 
 
 ### Step 1:
 
