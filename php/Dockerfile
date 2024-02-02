@@ -32,7 +32,7 @@ RUN apt-get -y install --fix-missing \
     libonig-dev \
     libxml2-dev
 
-RUN cp .env.example .env
+# RUN cp ../src/.env.example ../src/.env
 
 # Setup Supervisor
 RUN apt-get update && apt-get install -y supervisor && apt-get clean && rm -rf /var/lib/apt/lists/*
