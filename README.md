@@ -27,7 +27,7 @@ Go the application directory `link-harvester-app` and run the following commands
     $ docker compose exec app php artisan migrate && docker compose exec app php artisan optimize:clear
 
 
-### Step 7: See the browser
+### Step 7: browse the app
 
     URL: http://localhost:8080
 
