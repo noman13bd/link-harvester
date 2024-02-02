@@ -38,7 +38,7 @@ class UrlProcessor implements ShouldQueue
                     $domain = Domain::firstOrCreate(['name' => $host]);
                     $domain->urls()->updateOrCreate(['url' => $url]);
                 } else {
-                    Log::warning('Host not found for URL: ' . $url); // Log if host not found
+                    Log::warning('invalid host: ' . $url);
                 }
             } catch (\Exception $e) {
                 Log::error('Error processing URL ' . $url . ': ' . $e->getMessage());
@@ -51,8 +51,8 @@ class UrlProcessor implements ShouldQueue
      *
      * @return string
      */
-    public function uniqueId()
-    {
-        return md5(implode(',', $this->urls));
-    }
+    // public function uniqueId()
+    // {
+    //     return md5(implode(',', $this->urls));
+    // }
 }

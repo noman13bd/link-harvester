@@ -29,8 +29,8 @@ services:
 
   # Application Service
   app:
-    container_name: blog
-    build: 
+    container_name: link_harvester
+    build:
       context: ./php
       dockerfile: Dockerfile
     volumes:
@@ -38,3 +38,14 @@ services:
     ports:
       - "9000:9000"
     working_dir: /var/www
+
+  worker:
+    build:
+      context: ./php
+      dockerfile: Dockerfile
+    command: /usr/bin/supervisord -n -c /etc/supervisor/supervisord.conf
+    volumes:
+      - ./src:/var/www
+      - ./worker/laravel-worker.conf:/etc/supervisor/conf.d/laravel-worker.conf
+    depends_on:
+      - app

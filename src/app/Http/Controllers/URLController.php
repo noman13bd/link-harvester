@@ -27,20 +27,18 @@ class URLController extends Controller
     {
         try {
             $urls = explode("\n", trim($request->validated()['urls']));
-
             $validUrls = array_filter($urls, function ($url) {
                 return filter_var(trim($url), FILTER_VALIDATE_URL);
             });
-
             if (empty($validUrls)) {
-                return back()->withErrors(['urls' => 'No valid URLs provided.']);
+                return back()->withErrors(['urls' => 'invalid URLs.']);
             }
-            // Dispatching the job with the valid URLs
+            // dispatch job
             dispatch(new UrlProcessor($validUrls));
-            return redirect()->route('urls.create')->with('message', 'URLs are being processed.');
+            return redirect()->route('urls.create')->with('message', 'URLs will be  processed shortly.');
         } catch (\Exception $e) {
-            Log::error('Error storing URLs: ' . $e->getMessage());
-            return back()->withErrors(['error' => 'An error occurred while processing. Please try again.']);
+            Log::error('URLs not saved: ' . $e->getMessage());
+            return back()->withErrors(['error' => 'Error!!!']);
         }
     }
 
@@ -54,31 +52,31 @@ class URLController extends Controller
      {
          try {
              $search = $request->input('search');
-             $sort = $request->input('sort', 'url'); // default sort by url
-             $order = $request->input('order', 'asc'); // default order ascending
-
-             $query = UrlModel::with('domain')
-                 ->when($search, function ($query, $search) {
-                     return $query->where('url', 'like', "%$search%")
-                                 ->orWhereHas('domain', function ($query) use ($search) {
-                                     $query->where('name', 'like', "%$search%");
-                                 });
-                 });
-
+             $sort = $request->input('sort', 'url');
+             $order = $request->input('order', 'desc');
+             $query = Url::with('domain')
+                ->when($search, function ($query, $search) {
+                    return $query->where(function ($query) use ($search) {
+                        $query->where('url', 'like', "%$search%")
+                            ->orWhereHas('domain', function ($query) use ($search) {
+                                $query->where('name', 'like', "%$search%");
+                            });
+                    });
+                });
+            //  $rawSql = $query->toSql();
              if ($sort === 'domain.name') {
                  $query->join('domains', 'urls.domain_id', '=', 'domains.id')
-                       ->select('urls.*') // Avoid selecting everything from the joined table
+                       ->select('urls.*')
                        ->orderBy('domains.name', $order);
              } else {
                  $query->orderBy($sort, $order);
              }
-
              $urls = $query->paginate(10);
-
+            //  dd($urls);
              return view('urls.show', compact('urls', 'search', 'sort', 'order'));
          } catch (\Exception $e) {
-             Log::error('Error showing URLs: ' . $e->getMessage());
-             return back()->withErrors(['error' => 'An error occurred while retrieving URLs. Please try again.']);
+            Log::error('URLs display error: ' . $e->getMessage());
+             return back()->withErrors(['error' => 'Error!!!']);
          }
      }
 
