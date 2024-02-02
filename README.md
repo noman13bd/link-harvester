@@ -31,7 +31,7 @@ Go the application directory `link-harvester-app` and run the following commands
 
     URL: http://localhost:8080
 
-### Output
+### Output: Click to watch @ Youtube
 
 [![Working demo of the app](https://img.youtube.com/vi/NPVlJ6r5l6c/0.jpg)](https://www.youtube.com/watch?v=NPVlJ6r5l6c)
 
